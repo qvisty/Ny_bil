@@ -5,8 +5,14 @@
 function calculateTotalCost(car, params, type) {
   const { kmPerYear, ownerYears, elPrice, benzinPrice } = params;
 
-  // Indkøbspris
-  const purchasePrice = car.price;
+  // Brugt-bil: pris og vedligeholdelse justeres efter alder ved køb
+  const usedAge = type === "benzin" && params.benzinUsed ? Math.max(0, params.benzinUsedAge || 0) : 0;
+  const purchasePrice = usedAge > 0
+    ? Math.round(car.price * Math.pow(1 - car.depreciationRate, usedAge))
+    : car.price;
+  const maintenancePerYear = usedAge > 0
+    ? Math.round(car.maintenance * (1 + 0.10 * usedAge))
+    : car.maintenance;
 
   // Brændstof / el
   let fuelCostPerYear;
@@ -26,7 +32,7 @@ function calculateTotalCost(car, params, type) {
   const insuranceTotal = car.insurance * ownerYears;
 
   // Vedligeholdelse
-  const maintenanceTotal = car.maintenance * ownerYears;
+  const maintenanceTotal = maintenancePerYear * ownerYears;
 
   // Værditab (simpel: restværdi = pris * (1 - rate)^år)
   const residualValue = purchasePrice * Math.pow(1 - car.depreciationRate, ownerYears);
@@ -44,7 +50,7 @@ function calculateTotalCost(car, params, type) {
     insuranceTotal: Math.round(insuranceTotal),
     insurancePerYear: car.insurance,
     maintenanceTotal: Math.round(maintenanceTotal),
-    maintenancePerYear: car.maintenance,
+    maintenancePerYear: maintenancePerYear,
     depreciationTotal: Math.round(depreciationTotal),
     residualValue: Math.round(residualValue),
     total: Math.round(total),
@@ -65,7 +71,9 @@ function calculateBreakeven(evCar, benzinCar, params) {
       kmPerYear: params.kmPerYear,
       ownerYears: years || 1/12,
       elPrice: params.elPrice,
-      benzinPrice: params.benzinPrice
+      benzinPrice: params.benzinPrice,
+      benzinUsed: params.benzinUsed,
+      benzinUsedAge: params.benzinUsedAge
     };
 
     if (m === 0) {

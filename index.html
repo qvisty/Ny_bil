@@ -102,6 +102,16 @@
                         <select id="benzinSelect" class="input-select">
                             <option value="">-- Vælg model --</option>
                         </select>
+                        <div class="used-toggle">
+                            <label class="used-checkbox">
+                                <input type="checkbox" id="benzinUsed">
+                                <span>Køb som brugt benzinbil</span>
+                            </label>
+                            <div class="used-age-group" id="benzinUsedAgeGroup" style="display:none;">
+                                <label class="input-label" for="benzinUsedAge">Bilens alder ved køb (år)</label>
+                                <input type="number" id="benzinUsedAge" class="input-field" value="3" min="1" max="15" step="1">
+                            </div>
+                        </div>
                         <div class="car-specs" id="benzinSpecs"></div>
                     </div>
                 </div>

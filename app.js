@@ -26,6 +26,12 @@
     return n.toLocaleString("da-DK") + " kr";
   }
 
+  function getBenzinUsedConfig() {
+    const used = document.getElementById("benzinUsed").checked;
+    const age = parseInt(document.getElementById("benzinUsedAge").value) || 0;
+    return { used, age: used ? Math.max(1, age) : 0 };
+  }
+
   function showSpecs(car, type, container) {
     if (!car) {
       container.innerHTML = "";
@@ -33,14 +39,42 @@
     }
     const consumptionUnit = type === "ev" ? "kWh/100km" : "l/100km";
     const taxLabel = type === "ev" ? "Grøn ejerafgift" : "Vægtafgift";
+
+    let priceLabel = "Pris";
+    let displayPrice = car.price;
+    let displayMaintenance = car.maintenance;
+    if (type === "benzin") {
+      const { used, age } = getBenzinUsedConfig();
+      if (used && age > 0) {
+        displayPrice = Math.round(car.price * Math.pow(1 - car.depreciationRate, age));
+        displayMaintenance = Math.round(car.maintenance * (1 + 0.10 * age));
+        priceLabel = `Pris (brugt, ${age} år)`;
+      }
+    }
+
     container.innerHTML = `
-      <div class="spec-row"><span>Pris</span><strong>${formatKr(car.price)}</strong></div>
+      <div class="spec-row"><span>${priceLabel}</span><strong>${formatKr(displayPrice)}</strong></div>
       <div class="spec-row"><span>Forbrug</span><strong>${car.consumption} ${consumptionUnit}</strong></div>
       <div class="spec-row"><span>${taxLabel}</span><strong>${formatKr(car.tax)}/år</strong></div>
       <div class="spec-row"><span>Forsikring</span><strong>${formatKr(car.insurance)}/år</strong></div>
-      <div class="spec-row"><span>Vedligeholdelse</span><strong>${formatKr(car.maintenance)}/år</strong></div>
+      <div class="spec-row"><span>Vedligeholdelse</span><strong>${formatKr(displayMaintenance)}/år</strong></div>
     `;
   }
+
+  function refreshBenzinSpecs() {
+    const car = CAR_DATA.benzin.find((c) => c.id === benzinSelect.value);
+    showSpecs(car, "benzin", document.getElementById("benzinSpecs"));
+  }
+
+  const benzinUsedCheckbox = document.getElementById("benzinUsed");
+  const benzinUsedAgeGroup = document.getElementById("benzinUsedAgeGroup");
+  const benzinUsedAgeInput = document.getElementById("benzinUsedAge");
+
+  benzinUsedCheckbox.addEventListener("change", () => {
+    benzinUsedAgeGroup.style.display = benzinUsedCheckbox.checked ? "" : "none";
+    refreshBenzinSpecs();
+  });
+  benzinUsedAgeInput.addEventListener("input", refreshBenzinSpecs);
 
   evSelect.addEventListener("change", () => {
     const car = CAR_DATA.ev.find((c) => c.id === evSelect.value);
@@ -64,6 +98,7 @@
       return;
     }
 
+    const benzinUsedCfg = getBenzinUsedConfig();
     const params = {
       kmPerYear: parseInt(document.getElementById("kmPerYear").value) || 15000,
       ownerYears:
@@ -72,6 +107,8 @@
         parseFloat(document.getElementById("elPrice").value) || 2.5,
       benzinPrice:
         parseFloat(document.getElementById("benzinPrice").value) || 13.5,
+      benzinUsed: benzinUsedCfg.used,
+      benzinUsedAge: benzinUsedCfg.age,
     };
 
     const evResult = calculateTotalCost(evCar, params, "ev");
@@ -96,7 +133,11 @@
     document.getElementById("evSummaryMonthly").textContent =
       formatKr(evR.monthlyAvg) + "/md";
 
-    document.getElementById("benzinSummaryName").textContent = benzinCar.name;
+    const benzinNameSuffix = params.benzinUsed
+      ? ` (brugt, ${params.benzinUsedAge} år)`
+      : "";
+    document.getElementById("benzinSummaryName").textContent =
+      benzinCar.name + benzinNameSuffix;
     document.getElementById("benzinSummaryTotal").textContent = formatKr(
       benzinR.total
     );
