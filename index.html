@@ -96,7 +96,7 @@
                                 <input type="text" id="benzinCustomName" class="input-field" placeholder="F.eks. Seat Leon 1.5 TSI">
                             </div>
                             <div class="custom-field">
-                                <label class="input-label" for="benzinCustomPrice">Indkøbspris (kr)</label>
+                                <label class="input-label" for="benzinCustomPrice">Nypris (kr)</label>
                                 <input type="number" id="benzinCustomPrice" class="input-field" value="300000" min="50000" step="10000">
                             </div>
                             <div class="custom-field">
@@ -120,6 +120,30 @@
                                 <input type="number" id="benzinCustomDepreciation" class="input-field" value="14" min="1" max="50" step="1">
                             </div>
                         </div>
+                        <div class="car-info-fields" id="benzinInfoFields" style="display:none;">
+                            <h4 class="info-fields-title">Bilens nuværende status</h4>
+                            <div class="info-fields-grid">
+                                <div class="custom-field">
+                                    <label class="input-label" for="benzinAge">Alder (år)</label>
+                                    <input type="number" id="benzinAge" class="input-field" value="0" min="0" max="30" step="1">
+                                </div>
+                                <div class="custom-field">
+                                    <label class="input-label" for="benzinKm">Km kørt</label>
+                                    <input type="number" id="benzinKm" class="input-field" value="0" min="0" step="1000">
+                                </div>
+                            </div>
+                            <h4 class="info-fields-title">Brugtbilsalg</h4>
+                            <div class="info-fields-grid">
+                                <div class="custom-field">
+                                    <label class="input-label" for="benzinSalePrice">Salgspris (kr)</label>
+                                    <input type="number" id="benzinSalePrice" class="input-field" value="0" min="0" step="5000">
+                                </div>
+                                <div class="custom-field">
+                                    <label class="input-label" for="benzinDebt">Restgæld (kr)</label>
+                                    <input type="number" id="benzinDebt" class="input-field" value="0" min="0" step="5000">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -141,7 +165,7 @@
                                 <input type="text" id="evCustomName" class="input-field" placeholder="F.eks. BYD Atto 3">
                             </div>
                             <div class="custom-field">
-                                <label class="input-label" for="evCustomPrice">Indkøbspris (kr)</label>
+                                <label class="input-label" for="evCustomPrice">Nypris (kr)</label>
                                 <input type="number" id="evCustomPrice" class="input-field" value="350000" min="50000" step="10000">
                             </div>
                             <div class="custom-field">
@@ -163,6 +187,19 @@
                             <div class="custom-field">
                                 <label class="input-label" for="evCustomDepreciation">Værditab (%/år)</label>
                                 <input type="number" id="evCustomDepreciation" class="input-field" value="12" min="1" max="50" step="1">
+                            </div>
+                        </div>
+                        <div class="car-info-fields" id="evInfoFields" style="display:none;">
+                            <h4 class="info-fields-title">Bilens nuværende status</h4>
+                            <div class="info-fields-grid">
+                                <div class="custom-field">
+                                    <label class="input-label" for="evAge">Alder (år)</label>
+                                    <input type="number" id="evAge" class="input-field" value="0" min="0" max="30" step="1">
+                                </div>
+                                <div class="custom-field">
+                                    <label class="input-label" for="evKm">Km kørt</label>
+                                    <input type="number" id="evKm" class="input-field" value="0" min="0" step="1000">
+                                </div>
                             </div>
                         </div>
                     </div>

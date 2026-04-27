@@ -345,6 +345,41 @@ a { color: inherit; text-decoration: none; }
 
 .spec-row span { color: var(--text-muted); }
 
+/* ===== Car Info Fields (alder, km, salgspris, restgæld) ===== */
+.car-info-fields {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-light);
+}
+
+.info-fields-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    margin-top: 16px;
+}
+
+.info-fields-title:first-child {
+    margin-top: 0;
+}
+
+.info-fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.info-fields-grid .input-label {
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.info-fields-grid .input-field {
+    padding: 10px 14px;
+    font-size: 14px;
+}
+
 /* ===== Params Card ===== */
 .params-card { padding: 32px; }
 

@@ -37,24 +37,51 @@
     };
   }
 
-  function getSelectedCar(selectEl, type) {
-    if (selectEl.value === "custom") {
-      return getCustomCar(type);
+  function getCarInfoFields(type) {
+    const prefix = type === "ev" ? "ev" : "benzin";
+    const info = {
+      age: parseInt(document.getElementById(prefix + "Age").value) || 0,
+      km: parseInt(document.getElementById(prefix + "Km").value) || 0
+    };
+    if (type === "benzin") {
+      info.salePrice = parseFloat(document.getElementById("benzinSalePrice").value) || 0;
+      info.debt = parseFloat(document.getElementById("benzinDebt").value) || 0;
     }
-    const list = type === "ev" ? CAR_DATA.ev : CAR_DATA.benzin;
-    return list.find((c) => c.id === selectEl.value) || null;
+    return info;
+  }
+
+  function getSelectedCar(selectEl, type) {
+    let car;
+    if (selectEl.value === "custom") {
+      car = getCustomCar(type);
+    } else {
+      const list = type === "ev" ? CAR_DATA.ev : CAR_DATA.benzin;
+      car = list.find((c) => c.id === selectEl.value) || null;
+    }
+    if (car) {
+      const info = getCarInfoFields(type);
+      car = { ...car, ...info };
+    }
+    return car;
   }
 
   function toggleCustomFields(selectEl, fieldsId, specsId, type) {
     const fields = document.getElementById(fieldsId);
     const specs = document.getElementById(specsId);
+    const infoFields = document.getElementById(type + "InfoFields");
     if (selectEl.value === "custom") {
       fields.style.display = "";
       specs.innerHTML = "";
+      if (infoFields) infoFields.style.display = "";
+    } else if (selectEl.value === "") {
+      fields.style.display = "none";
+      specs.innerHTML = "";
+      if (infoFields) infoFields.style.display = "none";
     } else {
       fields.style.display = "none";
       const car = (type === "ev" ? CAR_DATA.ev : CAR_DATA.benzin).find((c) => c.id === selectEl.value);
       showSpecs(car, type, specs);
+      if (infoFields) infoFields.style.display = "";
     }
   }
 
@@ -157,8 +184,14 @@
       ["Forsikring", benzinR.insuranceTotal, evR.insuranceTotal],
       ["Vedligeholdelse", benzinR.maintenanceTotal, evR.maintenanceTotal],
       ["Værditab", benzinR.depreciationTotal, evR.depreciationTotal],
-      ["Total", benzinR.total, evR.total],
     ];
+
+    // Tilføj brugtbilsalg-linje hvis relevant
+    if (benzinR.saleProceeds !== 0 || evR.saleProceeds !== 0) {
+      rows.push(["Brugtbilsalg (fradrag)", -benzinR.saleProceeds, -evR.saleProceeds]);
+    }
+
+    rows.push(["Total", benzinR.total, evR.total]);
 
     let tableHtml = `
       <div class="breakdown-row breakdown-header">

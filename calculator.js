@@ -5,16 +5,18 @@
 function calculateTotalCost(car, params, type) {
   const { kmPerYear, ownerYears, elPrice, benzinPrice } = params;
 
-  // Indkøbspris
+  // Bilens alder påvirker startværdien (allerede afskrevet)
+  const carAge = car.age || 0;
   const purchasePrice = car.price;
+
+  // Nuværende værdi baseret på alder (bilen er allerede faldet i værdi)
+  const currentValue = purchasePrice * Math.pow(1 - car.depreciationRate, carAge);
 
   // Brændstof / el
   let fuelCostPerYear;
   if (type === "ev") {
-    // kWh/100km * km/year / 100 * kr/kWh
     fuelCostPerYear = (car.consumption / 100) * kmPerYear * elPrice;
   } else {
-    // l/100km * km/year / 100 * kr/l
     fuelCostPerYear = (car.consumption / 100) * kmPerYear * benzinPrice;
   }
   const fuelTotal = fuelCostPerYear * ownerYears;
@@ -28,15 +30,21 @@ function calculateTotalCost(car, params, type) {
   // Vedligeholdelse
   const maintenanceTotal = car.maintenance * ownerYears;
 
-  // Værditab (simpel: restværdi = pris * (1 - rate)^år)
-  const residualValue = purchasePrice * Math.pow(1 - car.depreciationRate, ownerYears);
-  const depreciationTotal = purchasePrice - residualValue;
+  // Værditab beregnet fra nuværende værdi (ikke nypris)
+  const futureValue = currentValue * Math.pow(1 - car.depreciationRate, ownerYears);
+  const depreciationTotal = currentValue - futureValue;
 
-  // Total
-  const total = fuelTotal + taxTotal + insuranceTotal + maintenanceTotal + depreciationTotal;
+  // Brugtbilsalg: salgspris minus restgæld (kun benzin)
+  const saleProceeds = (car.salePrice || 0) - (car.debt || 0);
+
+  // Total (saleProceeds trækkes fra da det er penge du får ind)
+  const total = fuelTotal + taxTotal + insuranceTotal + maintenanceTotal + depreciationTotal - saleProceeds;
 
   return {
     purchasePrice,
+    currentValue: Math.round(currentValue),
+    carAge,
+    carKm: car.km || 0,
     fuelTotal: Math.round(fuelTotal),
     fuelPerYear: Math.round(fuelCostPerYear),
     taxTotal: Math.round(taxTotal),
@@ -46,7 +54,8 @@ function calculateTotalCost(car, params, type) {
     maintenanceTotal: Math.round(maintenanceTotal),
     maintenancePerYear: car.maintenance,
     depreciationTotal: Math.round(depreciationTotal),
-    residualValue: Math.round(residualValue),
+    residualValue: Math.round(futureValue),
+    saleProceeds: Math.round(saleProceeds),
     total: Math.round(total),
     monthlyAvg: Math.round(total / (ownerYears * 12))
   };
