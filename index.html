@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ny Bil — EV vs. Benzin Totaløkonomi</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- App CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="nav" role="navigation" aria-label="Hovednavigation">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo" aria-label="Ny Bil Hjem">
+                <span class="nav-logo-mark">
+                    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 10L5 4H11L14 10H2Z" fill="#111"/>
+                        <rect x="3" y="10" width="3" height="2" rx="1" fill="#111"/>
+                        <rect x="10" y="10" width="3" height="2" rx="1" fill="#111"/>
+                    </svg>
+                </span>
+                Ny Bil
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#sammenligner">Sammenlign</a></li>
+                <li><a href="#resultater">Resultater</a></li>
+                <li><a href="#breakeven">Break-even</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="reveal">Hvad koster din næste bil <span class="accent-word">egentlig</span>?</h1>
+            <p class="hero-sub reveal">Sammenlign totaløkonomien mellem elbil og benzinbil over hele ejerperioden. Ingen skjulte omkostninger.</p>
+            <div class="hero-actions reveal">
+                <a href="#sammenligner" class="btn-acid">
+                    Start sammenligning
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+            </div>
+
+            <!-- Key metrics -->
+            <div class="hero-metrics reveal">
+                <div class="hero-metric">
+                    <div class="hero-metric-value">6+</div>
+                    <div class="hero-metric-label">Omkostningstyper</div>
+                </div>
+                <div class="hero-metric">
+                    <div class="hero-metric-value">10+</div>
+                    <div class="hero-metric-label">Bilmodeller</div>
+                </div>
+                <div class="hero-metric">
+                    <div class="hero-metric-value">15 år</div>
+                    <div class="hero-metric-label">Ejerperiode</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SAMMENLIGNER ===== -->
+    <section class="sammenligner" id="sammenligner">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-tag">Sammenligner</p>
+                <h2 class="section-title">Vælg dine biler og parametre</h2>
+            </div>
+
+            <div class="compare-grid reveal">
+                <!-- EV Card -->
+                <div class="card compare-card ev-card">
+                    <div class="compare-card-header">
+                        <span class="compare-badge ev-badge">⚡ Elbil</span>
+                    </div>
+                    <div class="compare-card-body">
+                        <label class="input-label" for="evSelect">Vælg elbil</label>
+                        <select id="evSelect" class="input-select">
+                            <option value="">-- Vælg model --</option>
+                        </select>
+                        <div class="car-specs" id="evSpecs"></div>
+                    </div>
+                </div>
+
+                <!-- Benzin Card -->
+                <div class="card compare-card benzin-card">
+                    <div class="compare-card-header">
+                        <span class="compare-badge benzin-badge">⛽ Benzin</span>
+                    </div>
+                    <div class="compare-card-body">
+                        <label class="input-label" for="benzinSelect">Vælg benzinbil</label>
+                        <select id="benzinSelect" class="input-select">
+                            <option value="">-- Vælg model --</option>
+                        </select>
+                        <div class="car-specs" id="benzinSpecs"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parametre -->
+            <div class="card params-card reveal">
+                <h3 class="params-title">Dine parametre</h3>
+                <div class="params-grid">
+                    <div class="param-group">
+                        <label class="input-label" for="kmPerYear">Årligt kørsel (km)</label>
+                        <input type="number" id="kmPerYear" class="input-field" value="15000" min="1000" max="100000" step="1000">
+                    </div>
+                    <div class="param-group">
+                        <label class="input-label" for="ownerYears">Ejerperiode (år)</label>
+                        <input type="number" id="ownerYears" class="input-field" value="5" min="1" max="15" step="1">
+                    </div>
+                    <div class="param-group">
+                        <label class="input-label" for="elPrice">Strømpris (kr/kWh)</label>
+                        <input type="number" id="elPrice" class="input-field" value="2.50" min="0.50" max="10" step="0.10">
+                    </div>
+                    <div class="param-group">
+                        <label class="input-label" for="benzinPrice">Benzinpris (kr/liter)</label>
+                        <input type="number" id="benzinPrice" class="input-field" value="13.50" min="5" max="30" step="0.50">
+                    </div>
+                </div>
+                <div class="params-action">
+                    <button id="calcBtn" class="btn-acid" type="button">
+                        Beregn totaløkonomi
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== RESULTATER ===== -->
+    <section class="resultater" id="resultater" style="display:none;">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-tag">Resultater</p>
+                <h2 class="section-title">Side-by-side sammenligning</h2>
+            </div>
+
+            <!-- Summary cards -->
+            <div class="summary-grid reveal">
+                <div class="card summary-card ev-summary">
+                    <div class="summary-badge ev-badge">⚡ Elbil</div>
+                    <div class="summary-name" id="evSummaryName"></div>
+                    <div class="summary-total" id="evSummaryTotal"></div>
+                    <div class="summary-monthly" id="evSummaryMonthly"></div>
+                </div>
+                <div class="card summary-card benzin-summary">
+                    <div class="summary-badge benzin-badge">⛽ Benzin</div>
+                    <div class="summary-name" id="benzinSummaryName"></div>
+                    <div class="summary-total" id="benzinSummaryTotal"></div>
+                    <div class="summary-monthly" id="benzinSummaryMonthly"></div>
+                </div>
+            </div>
+
+            <!-- Difference banner -->
+            <div class="card diff-banner reveal" id="diffBanner"></div>
+
+            <!-- Breakdown table -->
+            <div class="card breakdown-card reveal">
+                <h3 class="breakdown-title">Detaljeret opdeling</h3>
+                <div class="breakdown-table" id="breakdownTable"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BREAK-EVEN ===== -->
+    <section class="breakeven-section" id="breakeven" style="display:none;">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-tag">Break-even</p>
+                <h2 class="section-title">Hvornår bliver elbilen billigere?</h2>
+            </div>
+            <div class="card chart-card reveal">
+                <canvas id="breakevenChart" width="800" height="400"></canvas>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color ev-color"></span> Elbil akkumuleret</span>
+                    <span class="legend-item"><span class="legend-color benzin-color"></span> Benzin akkumuleret</span>
+                </div>
+                <div class="chart-note" id="breakevenNote"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <div class="container">
+            <p>Ny Bil — Personligt værktøj til bilsammenligning. Ikke kommercielt.</p>
+            <p class="footer-note">Data er estimater og kan afvige fra virkeligheden. Sidst opdateret april 2026.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="car-data.js"></script>
+    <script src="calculator.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
