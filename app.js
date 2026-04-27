@@ -21,6 +21,43 @@
     benzinSelect.appendChild(opt);
   });
 
+  // --- Custom model helpers ---
+  function getCustomCar(type) {
+    const prefix = type === "ev" ? "ev" : "benzin";
+    const name = document.getElementById(prefix + "CustomName").value.trim() || (type === "ev" ? "Egen elbil" : "Egen benzinbil");
+    return {
+      id: "custom",
+      name: name,
+      price: parseFloat(document.getElementById(prefix + "CustomPrice").value) || 0,
+      consumption: parseFloat(document.getElementById(prefix + "CustomConsumption").value) || 0,
+      tax: parseFloat(document.getElementById(prefix + "CustomTax").value) || 0,
+      insurance: parseFloat(document.getElementById(prefix + "CustomInsurance").value) || 0,
+      maintenance: parseFloat(document.getElementById(prefix + "CustomMaintenance").value) || 0,
+      depreciationRate: (parseFloat(document.getElementById(prefix + "CustomDepreciation").value) || 0) / 100
+    };
+  }
+
+  function getSelectedCar(selectEl, type) {
+    if (selectEl.value === "custom") {
+      return getCustomCar(type);
+    }
+    const list = type === "ev" ? CAR_DATA.ev : CAR_DATA.benzin;
+    return list.find((c) => c.id === selectEl.value) || null;
+  }
+
+  function toggleCustomFields(selectEl, fieldsId, specsId, type) {
+    const fields = document.getElementById(fieldsId);
+    const specs = document.getElementById(specsId);
+    if (selectEl.value === "custom") {
+      fields.style.display = "";
+      specs.innerHTML = "";
+    } else {
+      fields.style.display = "none";
+      const car = (type === "ev" ? CAR_DATA.ev : CAR_DATA.benzin).find((c) => c.id === selectEl.value);
+      showSpecs(car, type, specs);
+    }
+  }
+
   // --- Show specs on selection ---
   function formatKr(n) {
     return n.toLocaleString("da-DK") + " kr";
@@ -43,21 +80,17 @@
   }
 
   evSelect.addEventListener("change", () => {
-    const car = CAR_DATA.ev.find((c) => c.id === evSelect.value);
-    showSpecs(car, "ev", document.getElementById("evSpecs"));
+    toggleCustomFields(evSelect, "evCustomFields", "evSpecs", "ev");
   });
 
   benzinSelect.addEventListener("change", () => {
-    const car = CAR_DATA.benzin.find((c) => c.id === benzinSelect.value);
-    showSpecs(car, "benzin", document.getElementById("benzinSpecs"));
+    toggleCustomFields(benzinSelect, "benzinCustomFields", "benzinSpecs", "benzin");
   });
 
   // --- Calculate ---
   document.getElementById("calcBtn").addEventListener("click", () => {
-    const evCar = CAR_DATA.ev.find((c) => c.id === evSelect.value);
-    const benzinCar = CAR_DATA.benzin.find(
-      (c) => c.id === benzinSelect.value
-    );
+    const evCar = getSelectedCar(evSelect, "ev");
+    const benzinCar = getSelectedCar(benzinSelect, "benzin");
 
     if (!evCar || !benzinCar) {
       alert("Vælg venligst både en elbil og en benzinbil.");
@@ -117,26 +150,26 @@
       banner.innerHTML = "<strong>Begge biler koster det samme!</strong>";
     }
 
-    // Breakdown table
+    // Breakdown table — benzin til venstre, EV til højre
     const rows = [
-      ["Brændstof / el", evR.fuelTotal, benzinR.fuelTotal],
-      ["Afgifter", evR.taxTotal, benzinR.taxTotal],
-      ["Forsikring", evR.insuranceTotal, benzinR.insuranceTotal],
-      ["Vedligeholdelse", evR.maintenanceTotal, benzinR.maintenanceTotal],
-      ["Værditab", evR.depreciationTotal, benzinR.depreciationTotal],
-      ["Total", evR.total, benzinR.total],
+      ["Brændstof / el", benzinR.fuelTotal, evR.fuelTotal],
+      ["Afgifter", benzinR.taxTotal, evR.taxTotal],
+      ["Forsikring", benzinR.insuranceTotal, evR.insuranceTotal],
+      ["Vedligeholdelse", benzinR.maintenanceTotal, evR.maintenanceTotal],
+      ["Værditab", benzinR.depreciationTotal, evR.depreciationTotal],
+      ["Total", benzinR.total, evR.total],
     ];
 
     let tableHtml = `
       <div class="breakdown-row breakdown-header">
         <div class="breakdown-cell">Omkostning</div>
-        <div class="breakdown-cell">⚡ ${evCar.name}</div>
         <div class="breakdown-cell">⛽ ${benzinCar.name}</div>
+        <div class="breakdown-cell">⚡ ${evCar.name}</div>
         <div class="breakdown-cell">Forskel</div>
       </div>
     `;
 
-    rows.forEach(([label, evVal, benzinVal], idx) => {
+    rows.forEach(([label, benzinVal, evVal], idx) => {
       const rowDiff = benzinVal - evVal;
       const isTotal = idx === rows.length - 1;
       const diffClass =
@@ -155,8 +188,8 @@
       tableHtml += `
         <div class="breakdown-row${isTotal ? " breakdown-total" : ""}">
           <div class="breakdown-cell">${label}</div>
-          <div class="breakdown-cell">${formatKr(evVal)}</div>
           <div class="breakdown-cell">${formatKr(benzinVal)}</div>
+          <div class="breakdown-cell">${formatKr(evVal)}</div>
           <div class="breakdown-cell ${diffClass}">${diffText}</div>
         </div>
       `;

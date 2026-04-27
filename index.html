@@ -78,21 +78,7 @@
             </div>
 
             <div class="compare-grid reveal">
-                <!-- EV Card -->
-                <div class="card compare-card ev-card">
-                    <div class="compare-card-header">
-                        <span class="compare-badge ev-badge">⚡ Elbil</span>
-                    </div>
-                    <div class="compare-card-body">
-                        <label class="input-label" for="evSelect">Vælg elbil</label>
-                        <select id="evSelect" class="input-select">
-                            <option value="">-- Vælg model --</option>
-                        </select>
-                        <div class="car-specs" id="evSpecs"></div>
-                    </div>
-                </div>
-
-                <!-- Benzin Card -->
+                <!-- Benzin Card (venstre) -->
                 <div class="card compare-card benzin-card">
                     <div class="compare-card-header">
                         <span class="compare-badge benzin-badge">⛽ Benzin</span>
@@ -101,8 +87,84 @@
                         <label class="input-label" for="benzinSelect">Vælg benzinbil</label>
                         <select id="benzinSelect" class="input-select">
                             <option value="">-- Vælg model --</option>
+                            <option value="custom">✏️ Egen model</option>
                         </select>
                         <div class="car-specs" id="benzinSpecs"></div>
+                        <div class="custom-car-fields" id="benzinCustomFields" style="display:none;">
+                            <div class="custom-field">
+                                <label class="input-label" for="benzinCustomName">Modelnavn</label>
+                                <input type="text" id="benzinCustomName" class="input-field" placeholder="F.eks. Seat Leon 1.5 TSI">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="benzinCustomPrice">Indkøbspris (kr)</label>
+                                <input type="number" id="benzinCustomPrice" class="input-field" value="300000" min="50000" step="10000">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="benzinCustomConsumption">Forbrug (l/100km)</label>
+                                <input type="number" id="benzinCustomConsumption" class="input-field" value="5.5" min="2" max="20" step="0.1">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="benzinCustomTax">Vægtafgift (kr/år)</label>
+                                <input type="number" id="benzinCustomTax" class="input-field" value="3800" min="0" step="100">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="benzinCustomInsurance">Forsikring (kr/år)</label>
+                                <input type="number" id="benzinCustomInsurance" class="input-field" value="7500" min="0" step="100">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="benzinCustomMaintenance">Vedligeholdelse (kr/år)</label>
+                                <input type="number" id="benzinCustomMaintenance" class="input-field" value="5500" min="0" step="100">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="benzinCustomDepreciation">Værditab (%/år)</label>
+                                <input type="number" id="benzinCustomDepreciation" class="input-field" value="14" min="1" max="50" step="1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EV Card (højre) -->
+                <div class="card compare-card ev-card">
+                    <div class="compare-card-header">
+                        <span class="compare-badge ev-badge">⚡ Elbil</span>
+                    </div>
+                    <div class="compare-card-body">
+                        <label class="input-label" for="evSelect">Vælg elbil</label>
+                        <select id="evSelect" class="input-select">
+                            <option value="">-- Vælg model --</option>
+                            <option value="custom">✏️ Egen model</option>
+                        </select>
+                        <div class="car-specs" id="evSpecs"></div>
+                        <div class="custom-car-fields" id="evCustomFields" style="display:none;">
+                            <div class="custom-field">
+                                <label class="input-label" for="evCustomName">Modelnavn</label>
+                                <input type="text" id="evCustomName" class="input-field" placeholder="F.eks. BYD Atto 3">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="evCustomPrice">Indkøbspris (kr)</label>
+                                <input type="number" id="evCustomPrice" class="input-field" value="350000" min="50000" step="10000">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="evCustomConsumption">Forbrug (kWh/100km)</label>
+                                <input type="number" id="evCustomConsumption" class="input-field" value="16.0" min="5" max="50" step="0.1">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="evCustomTax">Grøn ejerafgift (kr/år)</label>
+                                <input type="number" id="evCustomTax" class="input-field" value="1070" min="0" step="100">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="evCustomInsurance">Forsikring (kr/år)</label>
+                                <input type="number" id="evCustomInsurance" class="input-field" value="8500" min="0" step="100">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="evCustomMaintenance">Vedligeholdelse (kr/år)</label>
+                                <input type="number" id="evCustomMaintenance" class="input-field" value="3000" min="0" step="100">
+                            </div>
+                            <div class="custom-field">
+                                <label class="input-label" for="evCustomDepreciation">Værditab (%/år)</label>
+                                <input type="number" id="evCustomDepreciation" class="input-field" value="12" min="1" max="50" step="1">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,17 +210,17 @@
 
             <!-- Summary cards -->
             <div class="summary-grid reveal">
-                <div class="card summary-card ev-summary">
-                    <div class="summary-badge ev-badge">⚡ Elbil</div>
-                    <div class="summary-name" id="evSummaryName"></div>
-                    <div class="summary-total" id="evSummaryTotal"></div>
-                    <div class="summary-monthly" id="evSummaryMonthly"></div>
-                </div>
                 <div class="card summary-card benzin-summary">
                     <div class="summary-badge benzin-badge">⛽ Benzin</div>
                     <div class="summary-name" id="benzinSummaryName"></div>
                     <div class="summary-total" id="benzinSummaryTotal"></div>
                     <div class="summary-monthly" id="benzinSummaryMonthly"></div>
+                </div>
+                <div class="card summary-card ev-summary">
+                    <div class="summary-badge ev-badge">⚡ Elbil</div>
+                    <div class="summary-name" id="evSummaryName"></div>
+                    <div class="summary-total" id="evSummaryTotal"></div>
+                    <div class="summary-monthly" id="evSummaryMonthly"></div>
                 </div>
             </div>
 

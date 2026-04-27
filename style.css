@@ -317,6 +317,24 @@ a { color: inherit; text-decoration: none; }
 
 .car-specs { margin-top: 16px; }
 
+/* ===== Custom Car Fields ===== */
+.custom-car-fields {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.custom-field .input-label {
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+.custom-field .input-field {
+    padding: 10px 14px;
+    font-size: 14px;
+}
+
 .spec-row {
     display: flex;
     justify-content: space-between;
